@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>H1CL 小贩文化专题闪卡</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@400;700;900&display=swap');
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: #fffaf5;
+            touch-action: none; /* 接管手势 */
+            -webkit-tap-highlight-color: transparent;
+            overflow: hidden;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        .app-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        /* 闪卡容器 - 增大尺寸 */
+        .card-wrapper {
+            width: 100%;
+            max-width: 400px;
+            height: 520px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .card-inner {
+            width: 100%;
+            height: 100%;
+            border-radius: 2.5rem;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 50px -12px rgba(124, 45, 18, 0.15);
+            border: 5px solid white;
+            position: relative;
+            z-index: 10;
+            overflow: hidden;
+            transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+
+        /* 左右导航按钮 - 减弱视觉干扰 */
+        .nav-btn {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(4px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 20;
+            color: #ea580c;
+            border: 1px solid rgba(255,255,255,0.8);
+            opacity: 0.5;
+        }
+
+        .btn-left { left: -10px; }
+        .btn-right { right: -10px; }
+
+        /* 主题颜色 */
+        .theme-hawker { background: linear-gradient(135deg, #fff7ed 0%, #ffedd5 100%); }
+        .word-primary { color: #7c2d12; }
+        .tag-accent { background: #f97316; color: white; }
+
+        .hidden { display: none; }
+        .back-style { background: white !important; }
+
+        /* 语音按钮 */
+        .voice-btn {
+            width: 60px;
+            height: 60px;
+            background: white;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 15px rgba(0,0,0,0.05);
+        }
+
+        .swipe-hint {
+            position: absolute;
+            bottom: -30px;
+            font-size: 10px;
+            font-weight: bold;
+            color: #fdba74;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="app-container">
+    <header class="text-center mb-8">
+        <h1 class="text-2xl font-black text-orange-950 tracking-tighter">小贩文化专题词汇</h1>
+        <div class="mt-2 text-xs font-bold text-orange-600 bg-white/80 px-4 py-1 rounded-full shadow-sm inline-block">
+            <span id="progress-info">1 / 20</span>
+        </div>
+    </header>
+
+    <div class="card-wrapper" id="touch-area">
+        <!-- 侧边导航 -->
+        <button onclick="prev()" class="nav-btn btn-left">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M15 19l-7-7 7-7" />
+            </svg>
+        </button>
+
+        <!-- 卡片主体 -->
+        <div id="main-card" class="card-inner theme-hawker p-10" onclick="toggleCard()">
+            <!-- 正面 -->
+            <div id="front-view" class="h-full flex flex-col items-center justify-between">
+                <span class="tag-accent text-xs font-black px-5 py-2 rounded-full uppercase tracking-widest">必学词汇</span>
+                
+                <h2 id="word-front" class="word-primary text-6xl font-black text-center leading-tight tracking-tighter">古早味</h2>
+                
+                <div class="flex flex-col items-center">
+                    <button onclick="event.stopPropagation(); speak();" class="voice-btn mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-8 w-8 text-orange-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
+                        </svg>
+                    </button>
+                    <p class="text-[10px] font-bold text-orange-300 uppercase tracking-widest">点击翻转 · 左右滑动切换</p>
+                </div>
+            </div>
+
+            <!-- 反面 -->
+            <div id="back-view" class="hidden h-full flex flex-col">
+                <div class="border-b-4 border-orange-50 pb-5 mb-8">
+                    <h3 id="word-back" class="text-4xl font-black text-slate-800 tracking-tighter">古早味</h3>
+                    <p id="pinyin-text" class="text-xl font-bold text-orange-500 italic mt-2">gǔ zǎo wèi</p>
+                </div>
+                
+                <div class="space-y-8 flex-grow overflow-y-auto pr-2">
+                    <div>
+                        <span class="block text-xs font-black text-slate-300 uppercase tracking-widest mb-3">释义 Meaning</span>
+                        <div class="bg-orange-50/30 p-5 rounded-3xl text-slate-700 text-lg font-medium leading-relaxed border border-orange-50">
+                            <p id="meaning-text">Traditional flavor</p>
+                        </div>
+                    </div>
+                    <div>
+                        <span class="block text-xs font-black text-slate-300 uppercase tracking-widest mb-3">搭配 Collocation</span>
+                        <p id="usage-text" class="text-slate-800 font-bold text-xl leading-snug"></p>
+                    </div>
+                </div>
+                
+                <p class="text-center text-slate-300 text-xs font-bold uppercase tracking-widest mt-6">点击回到正面</p>
+            </div>
+        </div>
+
+        <button onclick="next()" class="nav-btn btn-right">
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="3" d="M9 5l7 7-7 7" />
+            </svg>
+        </button>
+        
+        <div class="swipe-hint">Swipe left / right</div>
+    </div>
+</div>
+
+<script>
+    const cards = [
+        { word: "古早味", pinyin: "gǔ zǎo wèi", desc: "Traditional / Nostalgic flavor", coll: "这摊位的咖啡很有古早味。" },
+        { word: "经济实惠", pinyin: "jīng jì shí huì", desc: "Economical and practical", coll: "小贩中心的美食既经济实惠又美味。" },
+        { word: "阶层", pinyin: "jiē céng", desc: "Social class", coll: "这里聚集了社会各阶层的人。" },
+        { word: "价廉物美", pinyin: "jià lián wù měi", desc: "Cheap and good quality", coll: "价廉物美是小贩中心的特点。" },
+        { word: "传统风味", pinyin: "chuán tǒng fēng wèi", desc: "Traditional style", coll: "保留了多年不变的传统风味。" },
+        { word: "气氛热闹", pinyin: "qì fēn rè nao", desc: "Lively atmosphere", coll: "每到周末，小贩中心总是气氛热闹。" },
+        { word: "海南鸡饭", pinyin: "hǎi nán jī fàn", desc: "Hainanese Chicken Rice", coll: "海南鸡饭是享誉国际的狮城美食。" },
+        { word: "印度煎饼", pinyin: "yìn dù jiān bing", desc: "Roti Prata", coll: "许多国人喜欢早餐吃印度煎饼。" },
+        { word: "椰浆饭", pinyin: "yé jiāng fàn", desc: "Nasi Lemak", coll: "椰浆饭散发着浓郁的班兰叶香气。" },
+        { word: "双薪家庭", pinyin: "shuāng xīn jiā tíng", desc: "Dual-income family", coll: "双薪家庭通常没时间在家里做饭。" },
+        { word: "社会饭厅", pinyin: "shè huì fàn tīng", desc: "Social dining room", coll: "小贩中心是新加坡人的社会饭厅。" },
+        { word: "集体记忆", pinyin: "jí tǐ jì yì", desc: "Collective memory", coll: "小贩中心承载了我们的集体记忆。" },
+        { word: "归属感", pinyin: "guī shǔ gǎn", desc: "Sense of belonging", coll: "这些美食能增强我们对国家的归属感。" },
+        { word: "开销", pinyin: "kāi xiāo", desc: "Expenses", coll: "在小贩中心用餐能减少日常生活开销。" },
+        { word: "拉茶", pinyin: "lā chá", desc: "Teh Tarik", coll: "吃完早餐后，来一杯热腾腾的拉茶。" },
+        { word: "鸡排饭", pinyin: "jī pái fàn", desc: "Chicken Cutlet Rice", coll: "西餐摊位的鸡排饭深受年轻人欢迎。" },
+        { word: "福建虾面", pinyin: "fú jiàn xiā miàn", desc: "Hokkien Prawn Mee", coll: "这摊福建虾面的汤头非常鲜甜。" },
+        { word: "拼桌", pinyin: "pīn zhuō", desc: "Sharing table", coll: "人多时，我们经常需要和陌生人拼桌。" },
+        { word: "社交", pinyin: "shè jiāo", desc: "Socializing", coll: "小贩中心是街坊邻居社交的好地方。" },
+        { word: "交流", pinyin: "jiāo liú", desc: "Exchange / Interaction", coll: "不同种族的人在这里交流互动。" }
+    ];
+
+    let current = 0;
+    let isBack = false;
+    let startX = 0;
+
+    const mainCard = document.getElementById('main-card');
+    const touchArea = document.getElementById('touch-area');
+
+    function update() {
+        const item = cards[current];
+        document.getElementById('word-front').innerText = item.word;
+        document.getElementById('word-back').innerText = item.word;
+        document.getElementById('pinyin-text').innerText = item.pinyin;
+        document.getElementById('meaning-text').innerText = item.desc;
+        document.getElementById('usage-text').innerHTML = item.coll.replace(item.word, `<span class="text-orange-600 underline underline-offset-4">${item.word}</span>`);
+        document.getElementById('progress-info').innerText = `${current + 1} / ${cards.length}`;
+        
+        isBack = false;
+        document.getElementById('front-view').classList.remove('hidden');
+        document.getElementById('back-view').classList.add('hidden');
+        mainCard.classList.remove('back-style');
+        mainCard.style.transform = 'translateX(0)';
+    }
+
+    function toggleCard() {
+        isBack = !isBack;
+        if (isBack) {
+            mainCard.classList.add('back-style');
+            document.getElementById('front-view').classList.add('hidden');
+            document.getElementById('back-view').classList.remove('hidden');
+        } else {
+            mainCard.classList.remove('back-style');
+            document.getElementById('front-view').classList.remove('hidden');
+            document.getElementById('back-view').classList.add('hidden');
+        }
+    }
+
+    function next() {
+        if (current < cards.length - 1) {
+            current++;
+            update();
+        }
+    }
+
+    function prev() {
+        if (current > 0) {
+            current--;
+            update();
+        }
+    }
+
+    function speak() {
+        const msg = new SpeechSynthesisUtterance(cards[current].word);
+        msg.lang = 'zh-CN';
+        window.speechSynthesis.speak(msg);
+    }
+
+    // 滑动手势处理
+    touchArea.addEventListener('touchstart', (e) => {
+        startX = e.touches[0].clientX;
+    }, false);
+
+    touchArea.addEventListener('touchmove', (e) => {
+        const moveX = e.touches[0].clientX - startX;
+        if (Math.abs(moveX) < 100) {
+            mainCard.style.transform = `translateX(${moveX}px) rotate(${moveX * 0.05}deg)`;
+        }
+    }, false);
+
+    touchArea.addEventListener('touchend', (e) => {
+        const endX = e.changedTouches[0].clientX;
+        const diff = startX - endX;
+
+        if (diff > 80) {
+            next(); // 向左滑，下一个
+        } else if (diff < -80) {
+            prev(); // 向右滑，上一个
+        } else {
+            mainCard.style.transform = 'translateX(0)';
+        }
+    }, false);
+
+    update();
+</script>
+</body>
+</html>
