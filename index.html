@@ -14,7 +14,7 @@
             width: 100%;
             height: 100%;
             overflow: hidden;
-            background-color: #000; /* 底部背景设为深色突出卡片 */
+            background-color: #000;
             font-family: 'Noto Sans SC', sans-serif;
         }
 
@@ -26,7 +26,6 @@
             position: relative;
         }
 
-        /* 闪卡全屏容器 */
         .card-container {
             flex: 1;
             width: 100%;
@@ -47,19 +46,14 @@
             z-index: 10;
         }
 
-        /* 标题内置在卡片顶部 */
         .card-header {
             padding-top: env(safe-area-inset-top, 20px);
             text-align: center;
             padding-bottom: 10px;
         }
 
-        /* 翻转后的背面样式 */
-        .back-style {
-            background: #ffffff !important;
-        }
+        .back-style { background: #ffffff !important; }
 
-        /* 核心文字放大 */
         .main-word {
             font-size: 4.5rem;
             font-weight: 900;
@@ -68,7 +62,6 @@
             padding: 0 20px;
         }
 
-        /* 语音按钮悬浮 */
         .voice-trigger {
             width: 70px;
             height: 70px;
@@ -81,10 +74,8 @@
             margin-bottom: 20px;
         }
 
-        /* 隐藏滚动条 */
         .no-scrollbar::-webkit-scrollbar { display: none; }
         
-        /* 导航引导箭头 */
         .nav-hint {
             position: absolute;
             top: 50%;
@@ -99,9 +90,7 @@
 <body>
 
 <div class="full-screen-app" id="touch-area">
-    
     <div class="card-container">
-        <!-- 侧边隐约的导航提示 -->
         <div class="nav-hint left-4">❮</div>
         <div class="nav-hint right-4">❯</div>
 
@@ -110,7 +99,9 @@
             <div class="card-header mt-4">
                 <h1 class="text-orange-900/40 text-[10px] font-black uppercase tracking-[0.3em] mb-1">H1CL 专题闪卡</h1>
                 <h2 class="text-orange-800 text-lg font-black tracking-tight">小贩文化</h2>
-                <div class="mt-2 inline-block bg-orange-600/10 px-3 py-0.5 rounded-full">
+                <!-- 将操作指示语移至此处 -->
+                <p class="text-[9px] font-bold text-orange-900/40 uppercase tracking-widest mt-1 mb-2">Swipe to Switch / Tap to Flip</p>
+                <div class="inline-block bg-orange-600/10 px-3 py-0.5 rounded-full">
                     <span id="progress-info" class="text-orange-600 font-bold text-[10px]">1 / 20</span>
                 </div>
             </div>
@@ -127,7 +118,6 @@
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M15.536 8.464a5 5 0 010 7.072m2.828-9.9a9 9 0 010 12.728M5.586 15H4a1 1 0 01-1-1v-4a1 1 0 011-1h1.586l4.707-4.707C10.923 3.663 12 4.109 12 5v14c0 .891-1.077 1.337-1.707.707L5.586 15z" />
                         </svg>
                     </button>
-                    <p class="text-[10px] font-bold text-orange-800/30 uppercase tracking-widest">点击翻转 · 左右滑动切换</p>
                 </div>
             </div>
 
@@ -152,7 +142,7 @@
                 </div>
                 
                 <div class="mt-8 text-center">
-                    <span class="text-slate-300 text-[10px] font-bold uppercase tracking-widest">点击回到正面</span>
+                    <span class="text-slate-300 text-[10px] font-bold uppercase tracking-widest">Tap to back</span>
                 </div>
             </div>
         </div>
@@ -220,27 +210,14 @@
         }
     }
 
-    function next() {
-        if (current < cards.length - 1) {
-            current++;
-            update();
-        }
-    }
-
-    function prev() {
-        if (current > 0) {
-            current--;
-            update();
-        }
-    }
-
+    function next() { if (current < cards.length - 1) { current++; update(); } }
+    function prev() { if (current > 0) { current--; update(); } }
     function speak() {
         const msg = new SpeechSynthesisUtterance(cards[current].word);
         msg.lang = 'zh-CN';
         window.speechSynthesis.speak(msg);
     }
 
-    // 滑动手势
     touchArea.addEventListener('touchstart', (e) => {
         startX = e.touches[0].clientX;
         startY = e.touches[0].clientY;
@@ -249,8 +226,6 @@
     touchArea.addEventListener('touchmove', (e) => {
         const moveX = e.touches[0].clientX - startX;
         const moveY = e.touches[0].clientY - startY;
-        
-        // 只有在水平滑动明显大于垂直滑动时才移动卡片（防止上下滑释义时误触发）
         if (Math.abs(moveX) > Math.abs(moveY)) {
             mainCard.style.transform = `translateX(${moveX * 0.8}px) rotate(${moveX * 0.02}deg)`;
         }
@@ -259,14 +234,9 @@
     touchArea.addEventListener('touchend', (e) => {
         const endX = e.changedTouches[0].clientX;
         const diff = startX - endX;
-
-        if (diff > 100) {
-            next();
-        } else if (diff < -100) {
-            prev();
-        } else {
-            mainCard.style.transform = 'translateX(0)';
-        }
+        if (diff > 100) { next(); } 
+        else if (diff < -100) { prev(); } 
+        else { mainCard.style.transform = 'translateX(0)'; }
     }, false);
 
     update();
